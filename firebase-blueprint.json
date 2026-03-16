@@ -1,0 +1,31 @@
+{
+  "entities": {
+    "Wish": {
+      "title": "Wish",
+      "description": "A wedding wish/message from a guest",
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Guest name"
+        },
+        "message": {
+          "type": "string",
+          "description": "The message content"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Timestamp of the wish"
+        }
+      },
+      "required": ["name", "message", "createdAt"]
+    }
+  },
+  "firestore": {
+    "wishes": {
+      "schema": "Wish",
+      "description": "Collection of wedding wishes"
+    }
+  }
+}

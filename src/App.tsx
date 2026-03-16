@@ -19,8 +19,28 @@ import {
   Camera,
   Copy,
   Check,
-  Sparkles
+  Sparkles,
+  AlertCircle
 } from 'lucide-react';
+import { db } from './firebase';
+import { 
+  collection, 
+  addDoc, 
+  onSnapshot, 
+  query, 
+  orderBy, 
+  serverTimestamp,
+  Timestamp 
+} from 'firebase/firestore';
+
+// --- Types ---
+
+interface Wish {
+  id?: string;
+  name: string;
+  message: string;
+  createdAt: Timestamp | any;
+}
 
 // --- Components ---
 
@@ -66,7 +86,45 @@ export default function App() {
   const [isPlaying, setIsPlaying] = useState(false);
   const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
   const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
+  const [wishes, setWishes] = useState<Wish[]>([]);
+  const [wishName, setWishName] = useState('');
+  const [wishMessage, setWishMessage] = useState('');
+  const [isSending, setIsSending] = useState(false);
   const audioRef = useRef<HTMLAudioElement>(null);
+
+  useEffect(() => {
+    const q = query(collection(db, 'wishes'), orderBy('createdAt', 'desc'));
+    const unsubscribe = onSnapshot(q, (snapshot) => {
+      const wishesData: Wish[] = [];
+      snapshot.forEach((doc) => {
+        wishesData.push({ id: doc.id, ...doc.data() } as Wish);
+      });
+      setWishes(wishesData);
+    }, (error) => {
+      console.error("Firestore Error:", error);
+    });
+
+    return () => unsubscribe();
+  }, []);
+
+  const handleSendWish = async () => {
+    if (wishName.trim() && wishMessage.trim()) {
+      setIsSending(true);
+      try {
+        await addDoc(collection(db, 'wishes'), {
+          name: wishName,
+          message: wishMessage,
+          createdAt: serverTimestamp()
+        });
+        setWishName('');
+        setWishMessage('');
+      } catch (error) {
+        console.error("Error adding wish: ", error);
+      } finally {
+        setIsSending(false);
+      }
+    }
+  };
 
   const copyToClipboard = (text: string, index: number) => {
     navigator.clipboard.writeText(text);
@@ -210,7 +268,7 @@ export default function App() {
                       <img src="/bride.jpg" alt="Bride" className="w-full h-full object-cover" onError={(e) => { e.currentTarget.src = "https://picsum.photos/seed/bride/400/400" }} referrerPolicy="no-referrer" />
                     </div>
                     <h3 className="font-script text-4xl text-pink-700 mb-2">Aulia Ramadani</h3>
-                    <p className="text-sm text-pink-600 font-medium">Putri dari Bapak ABD AZIZ & Ibu NABASIA</p>
+                    <p className="text-sm text-pink-600 font-medium">Putri kedua dari Bapak ABD AZIZ & Ibu NABASIA</p>
                     <a href="https://www.instagram.com/dedeaul_?igsh=MWZmaDE4eG1oNjBrNQ==" target="_blank" rel="noopener noreferrer" className="mt-3 text-pink-400 hover:text-pink-600 transition-colors"><Instagram className="w-5 h-5" /></a>
                   </div>
 
@@ -221,7 +279,7 @@ export default function App() {
                       <img src="/groom.jpg" alt="Groom" className="w-full h-full object-cover" onError={(e) => { e.currentTarget.src = "https://picsum.photos/seed/groom/400/400" }} referrerPolicy="no-referrer" />
                     </div>
                     <h3 className="font-script text-4xl text-pink-700 mb-2">Jarwal</h3>
-                    <p className="text-sm text-pink-600 font-medium">Putra dari Bapak H RAMLI & Ibu HJ HAWANG</p>
+                    <p className="text-sm text-pink-600 font-medium">Putra bungsu dari Bapak H RAMLI & Ibu HJ HAWANG</p>
                     <a href="https://www.instagram.com/jarwall_09?igsh=MWVubnI2MW1scTUzMA==" target="_blank" rel="noopener noreferrer" className="mt-3 text-pink-400 hover:text-pink-600 transition-colors"><Instagram className="w-5 h-5" /></a>
                   </div>
                 </div>
@@ -301,20 +359,20 @@ export default function App() {
                 
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                   <div className="space-y-4">
-                    <img src="https://picsum.photos/seed/love1/400/600" className="rounded-2xl w-full object-cover shadow-md hover:scale-[1.02] transition-transform" alt="Gallery 1" referrerPolicy="no-referrer" />
-                    <img src="https://picsum.photos/seed/love2/400/400" className="rounded-2xl w-full object-cover shadow-md hover:scale-[1.02] transition-transform" alt="Gallery 2" referrerPolicy="no-referrer" />
+                    <img src="/love1.jpg" onError={(e) => { e.currentTarget.src = "https://picsum.photos/seed/love1/400/600" }} className="rounded-2xl w-full object-cover shadow-md hover:scale-[1.02] transition-transform" alt="Gallery 1" referrerPolicy="no-referrer" />
+                    <img src="/love2.jpg" onError={(e) => { e.currentTarget.src = "https://picsum.photos/seed/love2/400/400" }} className="rounded-2xl w-full object-cover shadow-md hover:scale-[1.02] transition-transform" alt="Gallery 2" referrerPolicy="no-referrer" />
                   </div>
                   <div className="space-y-4 pt-8">
-                    <img src="https://picsum.photos/seed/love3/400/400" className="rounded-2xl w-full object-cover shadow-md hover:scale-[1.02] transition-transform" alt="Gallery 3" referrerPolicy="no-referrer" />
-                    <img src="https://picsum.photos/seed/love4/400/600" className="rounded-2xl w-full object-cover shadow-md hover:scale-[1.02] transition-transform" alt="Gallery 4" referrerPolicy="no-referrer" />
+                    <img src="/love3.jpg" onError={(e) => { e.currentTarget.src = "https://picsum.photos/seed/love3/400/400" }} className="rounded-2xl w-full object-cover shadow-md hover:scale-[1.02] transition-transform" alt="Gallery 3" referrerPolicy="no-referrer" />
+                    <img src="/love4.jpg" onError={(e) => { e.currentTarget.src = "https://picsum.photos/seed/love4/400/600" }} className="rounded-2xl w-full object-cover shadow-md hover:scale-[1.02] transition-transform" alt="Gallery 4" referrerPolicy="no-referrer" />
                   </div>
                   <div className="space-y-4">
-                    <img src="https://picsum.photos/seed/love5/400/600" className="rounded-2xl w-full object-cover shadow-md hover:scale-[1.02] transition-transform" alt="Gallery 5" referrerPolicy="no-referrer" />
-                    <img src="https://picsum.photos/seed/love6/400/400" className="rounded-2xl w-full object-cover shadow-md hover:scale-[1.02] transition-transform" alt="Gallery 6" referrerPolicy="no-referrer" />
+                    <img src="/love5.jpg" onError={(e) => { e.currentTarget.src = "https://picsum.photos/seed/love5/400/600" }} className="rounded-2xl w-full object-cover shadow-md hover:scale-[1.02] transition-transform" alt="Gallery 5" referrerPolicy="no-referrer" />
+                    <img src="/love6.jpg" onError={(e) => { e.currentTarget.src = "https://picsum.photos/seed/love6/400/400" }} className="rounded-2xl w-full object-cover shadow-md hover:scale-[1.02] transition-transform" alt="Gallery 6" referrerPolicy="no-referrer" />
                   </div>
                   <div className="space-y-4 pt-8">
-                    <img src="https://picsum.photos/seed/love7/400/400" className="rounded-2xl w-full object-cover shadow-md hover:scale-[1.02] transition-transform" alt="Gallery 7" referrerPolicy="no-referrer" />
-                    <img src="https://picsum.photos/seed/love8/400/600" className="rounded-2xl w-full object-cover shadow-md hover:scale-[1.02] transition-transform" alt="Gallery 8" referrerPolicy="no-referrer" />
+                    <img src="/love7.jpg" onError={(e) => { e.currentTarget.src = "https://picsum.photos/seed/love7/400/400" }} className="rounded-2xl w-full object-cover shadow-md hover:scale-[1.02] transition-transform" alt="Gallery 7" referrerPolicy="no-referrer" />
+                    <img src="/love8.jpg" onError={(e) => { e.currentTarget.src = "https://picsum.photos/seed/love8/400/600" }} className="rounded-2xl w-full object-cover shadow-md hover:scale-[1.02] transition-transform" alt="Gallery 8" referrerPolicy="no-referrer" />
                   </div>
                 </div>
               </motion.div>
@@ -333,9 +391,9 @@ export default function App() {
                 
                 <div className="space-y-12 relative before:absolute before:inset-0 before:ml-5 before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-0.5 before:bg-gradient-to-b before:from-transparent before:via-pink-200 before:to-transparent">
                   {[
-                    { year: "2022", title: "Pertama Bertemu", desc: "Awal mula pertemuan yang tak disengaja namun berkesan." },
-                    { year: "2023", title: "Menjalin Kasih", desc: "Memutuskan untuk melangkah bersama dalam suka dan duka." },
-                    { year: "2025", title: "Lamaran", desc: "Satu langkah lebih dekat menuju janji suci pernikahan." }
+                    { year: "2025", title: "Pertama Bertemu", desc: "Takdir membawa kami pada sebuah pertemuan yang sederhana, namun di sanalah awal dari segalanya dimulai." },
+                    { year: "2025", title: "Menjalin Kasih", desc: "Dua hati yang berbeda akhirnya menemukan satu tujuan, memutuskan untuk saling melengkapi dan melangkah bersama." },
+                    { year: "2026", title: "Lamaran", desc: "Di hadapan keluarga, kami mengikat janji suci untuk melangkah ke jenjang yang lebih serius, menuju ibadah terlama kami." }
                   ].map((story, i) => (
                     <div key={i} className="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group is-active">
                       <div className="flex items-center justify-center w-10 h-10 rounded-full border border-white bg-pink-100 text-pink-600 shadow shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 z-10">
@@ -388,23 +446,54 @@ export default function App() {
                   <input 
                     type="text" 
                     placeholder="Nama Anda" 
+                    value={wishName}
+                    onChange={(e) => setWishName(e.target.value)}
                     className="w-full px-6 py-4 rounded-2xl border border-pink-100 focus:outline-none focus:ring-2 focus:ring-pink-200 bg-pink-50/50"
                   />
                   <textarea 
                     placeholder="Tulis ucapan anda..." 
                     rows={4}
+                    value={wishMessage}
+                    onChange={(e) => setWishMessage(e.target.value)}
                     className="w-full px-6 py-4 rounded-2xl border border-pink-100 focus:outline-none focus:ring-2 focus:ring-pink-200 bg-pink-50/50"
                   />
-                  <button className="w-full py-4 bg-pink-600 text-white rounded-2xl font-serif tracking-widest uppercase hover:bg-pink-700 transition-all shadow-lg">
-                    Kirim Ucapan
+                  <button 
+                    onClick={handleSendWish}
+                    disabled={isSending}
+                    className="w-full py-4 bg-pink-600 text-white rounded-2xl font-serif tracking-widest uppercase hover:bg-pink-700 transition-all shadow-lg disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                  >
+                    {isSending ? (
+                      <>
+                        <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                        Mengirim...
+                      </>
+                    ) : 'Kirim Ucapan'}
                   </button>
                 </div>
 
                 <div className="mt-12 space-y-4 max-h-64 overflow-y-auto pr-2 custom-scrollbar">
-                  {/* Ucapan akan muncul di sini */}
-                  <div className="text-center py-8 text-pink-300 italic">
-                    Belum ada ucapan...
-                  </div>
+                  {wishes.length > 0 ? (
+                    wishes.map((wish, i) => (
+                      <motion.div 
+                        key={wish.id || i}
+                        initial={{ opacity: 0, x: -20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        className="p-4 rounded-2xl bg-pink-50/50 border border-pink-100 text-left"
+                      >
+                        <div className="flex justify-between items-start mb-2">
+                          <h4 className="font-bold text-pink-800">{wish.name}</h4>
+                          <span className="text-[10px] text-pink-400 font-serif italic">
+                            {wish.createdAt?.toDate ? wish.createdAt.toDate().toLocaleString('id-ID', { day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : 'Baru saja'}
+                          </span>
+                        </div>
+                        <p className="text-sm text-pink-600 leading-relaxed">{wish.message}</p>
+                      </motion.div>
+                    ))
+                  ) : (
+                    <div className="text-center py-8 text-pink-300 italic">
+                      Belum ada ucapan...
+                    </div>
+                  )}
                 </div>
               </motion.div>
             </Section>
