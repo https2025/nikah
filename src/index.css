@@ -1,38 +1,115 @@
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&family=Inter:wght@100..900&family=Great+Vibes&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&family=Montserrat:wght@300;400;500;600;700&family=Great+Vibes&family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=Cinzel:wght@400;500;600;700;800;900&display=swap');
 @import "tailwindcss";
 
 @theme {
-  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
-  --font-serif: "Cormorant Garamond", serif;
+  --font-sans: "Montserrat", ui-sans-serif, system-ui, sans-serif;
+  --font-serif: "Playfair Display", serif;
   --font-script: "Great Vibes", cursive;
+  --font-body: "Cormorant Garamond", serif;
+  --font-display: "Cinzel", serif;
   
-  --color-pink-50: #fdf2f8;
-  --color-pink-100: #fce7f3;
-  --color-pink-200: #fbcfe8;
-  --color-pink-300: #f9a8d4;
-  --color-pink-400: #f472b6;
-  --color-pink-500: #ec4899;
-  --color-pink-600: #db2777;
-  --color-pink-700: #be185d;
-  --color-pink-800: #9d174d;
-  --color-pink-900: #831843;
+  --color-gold-50: #fbf9f2;
+  --color-gold-100: #f5f0db;
+  --color-gold-200: #eadfb7;
+  --color-gold-300: #dcc88a;
+  --color-gold-400: #cdac62;
+  --color-gold-500: #c29546;
+  --color-gold-600: #a97938;
+  --color-gold-700: #8d6031;
+  --color-gold-800: #754f2c;
+  --color-gold-900: #634328;
+
+  --color-rosegold-50: #fdf8f8;
+  --color-rosegold-100: #f9ecec;
+  --color-rosegold-200: #f4dada;
+  --color-rosegold-300: #ecbcbc;
+  --color-rosegold-400: #e09494;
+  --color-rosegold-500: #d17171;
+  --color-rosegold-600: #b76e79; /* Classic Rose Gold */
+  --color-rosegold-700: #a14646;
+  --color-rosegold-800: #853d3d;
+  --color-rosegold-900: #703636;
+  --color-rosegold-950: #4a2323;
+
+  --color-royal-bg: #0a0a0a;
+  --color-royal-navy: #001f3f;
+  --color-royal-emerald: #013220;
+
+  @keyframes shimmer {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+  }
+  --animate-shimmer: shimmer 3s infinite linear;
 }
 
 @layer base {
   body {
-    @apply bg-pink-50 text-pink-900 font-sans;
+    @apply bg-royal-bg text-gold-100 font-sans;
   }
 }
 
 .glass-card {
-  @apply bg-white/40 backdrop-blur-md border border-white/20 shadow-xl;
+  @apply bg-black/40 backdrop-blur-xl border border-gold-500/20 shadow-2xl;
+}
+
+.royal-border {
+  @apply border-2 border-gold-500/40 relative;
+}
+
+.royal-border::before {
+  content: '';
+  @apply absolute -inset-1.5 border border-gold-400/20 pointer-events-none;
+}
+
+.royal-border::after {
+  content: '';
+  @apply absolute -inset-3 border border-gold-600/10 pointer-events-none;
+}
+
+.wax-seal {
+  @apply relative w-20 h-20 bg-gradient-to-br from-rosegold-800 to-rosegold-950 rounded-full flex items-center justify-center shadow-2xl transform rotate-[-5deg] transition-transform hover:rotate-0;
+  box-shadow: inset 0 0 15px rgba(0,0,0,0.5), 0 8px 20px rgba(0,0,0,0.4);
+}
+
+.wax-seal::after {
+  content: 'A&J';
+  @apply text-gold-200 font-display text-2xl font-bold opacity-90 tracking-tighter;
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
 }
 
 .animate-float {
-  animation: float 6s ease-in-out infinite;
+  animation: float 8s ease-in-out infinite;
+}
+
+.animate-shimmer {
+  background: linear-gradient(90deg, transparent, rgba(255,215,0,0.2), transparent);
+  background-size: 200% 100%;
+  @apply animate-shimmer;
 }
 
 @keyframes float {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-20px); }
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-30px) rotate(2deg); }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.ornament-line {
+  @apply h-[1px] w-full bg-gradient-to-r from-transparent via-gold-500 to-transparent my-6;
+}
+
+.damask-pattern {
+  background-image: url('https://www.transparenttextures.com/patterns/royal-feather.png');
+  background-repeat: repeat;
+}
+
+.gold-text-shimmer {
+  @apply bg-clip-text text-transparent bg-gradient-to-r from-gold-400 via-gold-100 to-gold-400 animate-shimmer;
+}
+
+.royal-gradient-bg {
+  @apply bg-gradient-to-b from-royal-bg via-black to-royal-bg;
 }
