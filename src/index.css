@@ -8,28 +8,28 @@
   --font-body: "Cormorant Garamond", serif;
   --font-display: "Cinzel", serif;
   
-  --color-gold-50: #fff5f7;
-  --color-gold-100: #ffe4e9;
-  --color-gold-200: #ffccd5;
-  --color-gold-300: #ffa3b1;
-  --color-gold-400: #ff708d;
-  --color-gold-500: #f83b65;
-  --color-gold-600: #e61e50;
-  --color-gold-700: #c21340;
-  --color-gold-800: #a11238;
-  --color-gold-900: #861433;
+  --color-gold-50: #f0f7ff;
+  --color-gold-100: #e0effe;
+  --color-gold-200: #bae0fd;
+  --color-gold-300: #7cc8fb;
+  --color-gold-400: #38aaf7;
+  --color-gold-500: #0f8ee9;
+  --color-gold-600: #0270c7;
+  --color-gold-700: #0359a1;
+  --color-gold-800: #074c84;
+  --color-gold-900: #0c406e;
 
-  --color-rosegold-50: #fdf8f8;
-  --color-rosegold-100: #f9ecec;
-  --color-rosegold-200: #f4dada;
-  --color-rosegold-300: #ecbcbc;
-  --color-rosegold-400: #e09494;
-  --color-rosegold-500: #d17171;
-  --color-rosegold-600: #b76e79; /* Classic Rose Gold */
-  --color-rosegold-700: #a14646;
-  --color-rosegold-800: #853d3d;
-  --color-rosegold-900: #703636;
-  --color-rosegold-950: #4a2323;
+  --color-rosegold-50: #f5f8ff;
+  --color-rosegold-100: #ebf1ff;
+  --color-rosegold-200: #d6e3ff;
+  --color-rosegold-300: #adc6ff;
+  --color-rosegold-400: #85a9ff;
+  --color-rosegold-500: #5c8cff;
+  --color-rosegold-600: #336fff;
+  --color-rosegold-700: #0a52ff;
+  --color-rosegold-800: #0041e6;
+  --color-rosegold-900: #0036bf;
+  --color-rosegold-950: #00227a;
 
   --color-royal-bg: #fdfbf7;
   --color-royal-navy: #003366;
