@@ -31,9 +31,10 @@
   --color-rosegold-900: #703636;
   --color-rosegold-950: #4a2323;
 
-  --color-royal-bg: #0a0a0a;
-  --color-royal-navy: #001f3f;
+  --color-royal-bg: #fdfbf7;
+  --color-royal-navy: #003366;
   --color-royal-emerald: #013220;
+  --color-royal-text: #2c2416;
 
   @keyframes shimmer {
     0% { background-position: -200% 0; }
@@ -44,12 +45,12 @@
 
 @layer base {
   body {
-    @apply bg-royal-bg text-gold-100 font-sans;
+    @apply bg-transparent text-royal-text font-sans;
   }
 }
 
 .glass-card {
-  @apply bg-black/40 backdrop-blur-xl border border-gold-500/20 shadow-2xl;
+  @apply bg-white/60 backdrop-blur-xl border border-gold-500/20 shadow-2xl;
 }
 
 .royal-border {
@@ -106,10 +107,24 @@
   background-repeat: repeat;
 }
 
+@keyframes floral-pulse {
+  from { transform: scale(1) rotate(var(--rotate, 0deg)); opacity: 0.5; }
+  to { transform: scale(1.08) rotate(calc(var(--rotate, 0deg) + 3deg)); opacity: 0.8; }
+}
+
+.floral-corner-anim {
+  animation: floral-pulse 4s ease-in-out infinite alternate;
+}
+
+.floral-bg-pattern {
+  background-image: url('https://www.transparenttextures.com/patterns/floral-paper.png');
+  background-repeat: repeat;
+}
+
 .gold-text-shimmer {
-  @apply bg-clip-text text-transparent bg-gradient-to-r from-gold-400 via-gold-100 to-gold-400 animate-shimmer;
+  @apply bg-clip-text text-transparent bg-gradient-to-r from-gold-600 via-gold-400 to-gold-600 animate-shimmer;
 }
 
 .royal-gradient-bg {
-  @apply bg-gradient-to-b from-royal-bg via-black to-royal-bg;
+  @apply bg-gradient-to-b from-royal-bg via-white to-royal-bg;
 }
